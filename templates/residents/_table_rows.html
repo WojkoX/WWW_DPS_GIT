@@ -1,0 +1,21 @@
+{% for r in residents %}
+<tr>
+  <td><strong>{{ r.last_name }}</strong> {{ r.first_name }}</td>
+  <td>{{ r.room }}</td>
+  <td>{{ r.floor }}</td>
+  <td>
+    {% if r.is_active %}
+      <span class="badge bg-success">OK</span>
+    {% else %}
+      <span class="badge bg-secondary">Nieaktywny</span>
+    {% endif %}
+  </td>
+  <td>{{ r.notes or '' }}</td>
+  <td>
+    <a href="{{ url_for('residents.edit_resident', resident_id=r.id) }}"
+       class="btn btn-sm btn-primary">
+      Edytuj
+    </a>
+  </td>
+</tr>
+{% endfor %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<main class="app-content">                              
+<div class="container">
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Słownik diet</h3>
+    <a href="{{ url_for('diets.add_diet') }}" class="btn btn-success">
+        ➕ Nowa dieta
+    </a>
+</div>
+
+<table class="table table-striped table-bordered align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Nazwa</th>
+            <th>Kod</th>
+            <th>Flagi</th>
+             <th>Sort</th>
+            <th>Aktywna</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in diets.items %}
+        <tr>
+            <td>{{ d.name }}</td>
+            <td><code>{{ d.code }}</code></td>
+            <td class="small">
+                {% if d.is_basic %}Podstawowa {% endif %}
+                {% if d.is_light %}Lekkostrawna {% endif %}
+                {% if d.is_diabetes %}Cukrzyca {% endif %}
+                {% if d.is_milk_free %}Bezmleczna {% endif %}
+                {% if d.is_mix %}MIX {% endif %}
+                {% if d.is_peg %}PEG {% endif %}
+                {% if d.is_restrictive %}Restrykcyjna {% endif %}
+            </td>
+             <td><code>{{ d.sort_order }}</code></td>
+            <td>
+                {% if d.active %}
+                    <span class="badge bg-success">TAK</span>
+                {% else %}
+                    <span class="badge bg-secondary">NIE</span>
+                {% endif %}
+            </td>
+            <td>
+                <a class="btn btn-sm btn-primary"
+                   href="{{ url_for('diets.edit_diet', diet_id=d.id) }}">
+                   Edytuj
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<nav>
+<ul class="pagination">
+    {% if diets.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ diets.prev_num }}">«</a>
+        </li>
+    {% endif %}
+    <li class="page-item disabled">
+        <span class="page-link">
+            Strona {{ diets.page }} / {{ diets.pages }}
+        </span>
+    </li>
+    {% if diets.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ diets.next_num }}">»</a>
+        </li>
+    {% endif %}
+</ul>
+</nav>
+</div>
+</main>
+{% endblock %}

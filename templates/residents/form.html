@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+
+<h3>{% if resident %}Edycja mieszkańca{% else %}Nowy mieszkaniec{% endif %}</h3>
+
+<form method="post" class="mt-3">
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label>Nazwisko</label>
+        <input class="form-control" name="last_name"
+               value="{{ resident.last_name if resident else '' }}" required>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label>Imię</label>
+        <input class="form-control" name="first_name"
+               value="{{ resident.first_name if resident else '' }}" required>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <label>Numer pokoju</label>
+        <input class="form-control" name="room_number"
+               value="{{ resident.room_number if resident else '' }}" required>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 form-check">
+        <input class="form-check-input" type="checkbox" name="is_hospital"
+               {% if resident and resident.is_hospital %}checked{% endif %}>
+        <label class="form-check-label">Szpital</label>
+    </div>
+
+    <div class="col-md-4 form-check">
+        <input class="form-check-input" type="checkbox" name="is_pass"
+               {% if resident and resident.is_pass %}checked{% endif %}>
+        <label class="form-check-label">Przepustka</label>
+    </div>
+
+    <div class="col-md-4 form-check">
+        <input class="form-check-input" type="checkbox" name="is_active"
+               {% if resident is none or resident.is_active %}checked{% endif %}>
+        <label class="form-check-label">Aktywny</label>
+    </div>
+</div>
+
+<div class="mb-3 mt-3">
+    <label>Uwagi</label>
+    <textarea class="form-control" name="notes">{{ resident.notes if resident else '' }}</textarea>
+</div>
+
+<hr>
+
+<div class="d-flex justify-content-between align-items-center">
+
+    <!-- LEWA STRONA: ZAPIS / ANULUJ -->
+    <div>
+        <button type="submit" class="btn btn-primary">Zapisz</button>
+        <a href="{{ url_for('residents.list_residents') }}"
+           class="btn btn-secondary">
+            Anuluj
+        </a>
+    </div>
+
+    <!-- PRAWA STRONA: DELETE -->
+    {% if resident and not resident.is_active %}
+    <button
+        type="submit"
+        class="btn btn-danger"
+        formaction="{{ url_for('residents.delete_resident', resident_id=resident.id) }}"
+        formmethod="post"
+        onclick="return confirm(
+            'UWAGA!\n\n' +
+            'Ta operacja TRWALE usuwa mieszkańca z bazy danych.\n' +
+            'Nie będzie możliwości cofnięcia tej operacji.\n\n' +
+            'Czy na pewno chcesz kontynuować?'
+        );">
+        🗑 Usuń mieszkańca z bazy
+    </button>
+    {% endif %}
+
+</div>
+
+</form>
+
+</div>
+{% endblock %}

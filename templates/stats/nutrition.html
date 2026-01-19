@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<main class="app-content">
+<div class="container">
+<h3 class="mb-4">📊 Zestawienia i dokumenty – żywienie</h3>
+
+{% for floor, data in stats.items() %}
+<hr class="my-5">
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-11">
+
+      <h2 class="mb-3"><b>🏢 Piętro: {{ floor }}</b></h2>
+
+      <table class="table table-bordered table-sm text-center mb-5">
+        <thead class="table-light text-center">
+          <tr>
+            <th>Liczba mieszkańców ogółem</th>
+            <th>Osoby będące w szpitalu</th>
+            <th>Osoby będące na przepustce</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          <tr>
+            <td>{{ data.presence_summary.total }}</td>
+            <td>{{ data.presence_summary.hospital }}</td>
+            <td>{{ data.presence_summary.pass }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- TABELA GŁÓWNA -->
+      <table class="table table-bordered table-sm text-center mb-5">
+        <thead class="table-light">
+          <tr>
+            <th>LP</th>
+            <th>POKÓJ</th>
+            <th>NAZWISKO IMIĘ</th>
+            <th>DIETA</th>
+            <th>JE W POKOJU</th>
+            <th>POSIŁKI W POKOJU</th>
+            <th>UWAGI</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in data.present_residents %}
+          <tr>
+            <td>{{ r.lp }}</td>
+            <td>{{ r.room }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.diet }}</td>
+            <td class="text-center">
+              {% if r.eat_in_room %}
+                <span class="text-success fw-bold">✔</span>
+              {% else %}
+                <span class="text-danger fw-bold">✖</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if r.meals %}
+                {{ r.meals | join(", ") }}
+              {% else %}
+                —
+              {% endif %}
+            </td>
+            <td>{{ r.notes }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- ZESTAWIENIE 1 -->
+      <h5 class="mt-4 mb-2">
+        ZESTAWIENIE WSZYSTKICH MIESZKAŃCÓW SPOŻYWAJĄCYCH POSIŁKI W POKOJACH
+      </h5>
+
+      <table class="table table-bordered table-sm text-center mb-5">
+        <thead class="table-light">
+          <tr>
+            <th>Rodzaj diety</th>
+            <th>Śniadanie</th>
+            <th>Obiad</th>
+            <th>Kolacja</th>
+            <th>w tym bezmleczna</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for diet, s in data.summary_eat_in_room.items() %}
+          <tr>
+            <td class="text-start fw-bold">{{ diet }}</td>
+            <td>{{ s['śniadanie'] }}</td>
+            <td>{{ s['obiad'] }}</td>
+            <td>{{ s['kolacja'] }}</td>
+            <td>{{ s['bezmleczna'] }}</td>
+          </tr>
+          {% endfor %}
+          <tr class="fw-bold">
+          <td>RAZEM</td>
+          <td>{{ data.summary_eat_in_room.values() | sum(attribute='śniadanie') }}</td>
+          <td>{{ data.summary_eat_in_room.values() | sum(attribute='obiad') }}</td>
+          <td>{{ data.summary_eat_in_room.values() | sum(attribute='kolacja') }}</td>
+          <td>{{ data.summary_eat_in_room.values() | sum(attribute='bezmleczna') }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!-- ZESTAWIENIE 2 -->
+      <h5 class="mt-4 mb-2">
+        ZESTAWIENIE W PRZYPADKU JAK WSZYSCY MIESZKAŃCY SPOŻYWAJĄ POSIŁKI W POKOJACH
+      </h5>
+
+      <table class="table table-bordered table-sm text-center">
+        <thead class="table-light">
+          <tr>
+            <th>Rodzaj diety</th>
+            <th>Śniadanie</th>
+            <th>Obiad</th>
+            <th>Kolacja</th>
+            <th>w tym bezmleczna</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for diet, s in data.summary_all_present.items() %}
+          <tr>
+            <td class="text-start fw-bold">{{ diet }}</td>
+            <td>{{ s['śniadanie'] }}</td>
+            <td>{{ s['obiad'] }}</td>
+            <td>{{ s['kolacja'] }}</td>
+            <td>{{ s['bezmleczna'] }}</td>
+          </tr>
+          {% endfor %}
+          <tr class="fw-bold">
+          <td>RAZEM</td>
+          <td>{{ data.summary_all_present.values() | sum(attribute='śniadanie') }}</td>
+          <td>{{ data.summary_all_present.values() | sum(attribute='obiad') }}</td>
+          <td>{{ data.summary_all_present.values() | sum(attribute='kolacja') }}</td>
+          <td>{{ data.summary_all_present.values() | sum(attribute='bezmleczna') }}</td>
+        </tr>
+        </tbody>
+      </table>
+              <div class="d-flex justify-content-end align-items-center gap-2 mt-3">
+
+                  <form method="post"
+                        action="{{ url_for('stats.floor_docx', floor=floor) }}"
+                        class="m-0">
+                    <button class="btn btn-outline-primary btn-sm">
+                      📄 Generuj dokument DOCX
+                    </button>
+                  </form>
+
+                  <form method="post"
+                        action="{{ url_for('stats.generate_floor_pdf', floor=floor) }}"
+                        class="m-0">
+                    <button class="btn btn-danger btn-sm">
+                      🖨️ Pobierz PDF do druku
+                    </button>
+                  </form>
+
+                  <a href="{{ url_for('print.floor_print', floor=floor) }}"
+                    target="_blank"
+                    class="btn btn-outline-dark btn-sm">
+                    🖨️ Druk HTML / PDF
+                  </a>
+
+          </div>
+
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+</div>
+<hr><hr>
+</main>
+{% endblock %}

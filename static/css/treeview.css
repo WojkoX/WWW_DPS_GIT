@@ -1,0 +1,177 @@
+/* =====================================================
+   SIDEBAR – KONTEKST LAYOUTU
+   ===================================================== */
+
+.sidebar-fixed {
+  position: sticky;
+  top: 56px; /* wysokość navbaru */
+  height: calc(100vh - 56px);
+  overflow: hidden;
+  padding: 0;
+}
+
+/* sidebar pod navbarem */
+.app-sidebar {
+  position: relative;
+}
+
+/* =====================================================
+   TREEVIEW CONTAINER (SCROLL TU!)
+   ===================================================== */
+
+
+/* wrapper, który liczy wysokość */
+.treeview-wrapper {
+  height: calc(100vh - 56px); /* 56px = navbar */
+  overflow-y: auto;
+  overflow-x: hidden;
+
+ background: rgb(36, 64, 91);;   /* 👈 TO JEST TEN KOLOR BACKGROUNDU TREEVIEW */
+    border-right: 1px solid #E2E3E5;
+
+  padding: 8px 6px;
+}
+
+/* =====================================================
+   SCROLLBAR
+   ===================================================== */
+
+/* Chrome / Edge */
+.treeview-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.treeview-wrapper::-webkit-scrollbar-thumb {
+  background-color: #e5e8eb;
+  border-radius: 6px;
+}
+
+.treeview-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #e5e8eb;
+}
+
+.treeview-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Firefox */
+.treeview-wrapper {
+  scrollbar-width: thin;
+  scrollbar-color:#e5e8eb; transparent;
+  
+}
+
+
+/* =====================================================
+   ACCORDION RESET (BEZ ZABIJANIA BOOTSTRAPA)
+   ===================================================== */
+
+.accordion {
+  --bs-accordion-border-width: 0;
+  --bs-accordion-bg: transparent;
+  --bs-accordion-active-bg: transparent;
+  background-color: #E2E3E5;
+}
+
+.accordion-item {
+  border: 0;
+  background: transparent;
+  background-color: #E2E3E5;
+}
+
+.accordion-button {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 6px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  white-space: normal;
+  background-color: #E2E3E5;
+}
+
+.accordion-button::after {
+  display: none;
+}
+
+.accordion-button:not(.collapsed) {
+  background: linear-gradient(
+    to right,
+    rgba(59,130,246,0.15),
+    transparent
+  );
+  color: #1e3a8a;
+}
+
+
+/* =====================================================
+   ROOM LEVEL
+   ===================================================== */
+
+.accordion .accordion .accordion-button {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 8px;
+  color: #000000;
+  background-color: #E2E3E5;
+
+}
+
+.accordion .accordion-button {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 8px;
+  color: #000000;
+  background-color: #6F9CC5;
+
+}
+
+.accordion-body {
+  padding: 2px 0 2px 8px;
+  background-color: #E2E3E5;
+}
+
+
+/* =====================================================
+   TREE LEAF – MIESZKANIEC
+   ===================================================== */
+
+.tree-leaf {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+
+  padding: 4px 8px;
+  margin: 1px 0;
+  border-radius: 6px;
+
+  cursor: pointer;
+  font-size: 14px;
+  color: #111827;
+
+  white-space: normal;
+  word-break: break-word;
+
+  transition: background 0.15s ease;
+}
+
+.tree-leaf:hover {
+  background: rgba(0,0,0,0.06);
+}
+
+.tree-leaf.active {
+  background: rgba(128,130,246,0.25);
+
+  font-weight: 600;
+}
+
+
+/* =====================================================
+   BUTTONY GLOBALNE
+   ===================================================== */
+
+.treeview-wrapper .btn {
+  font-size: 12px;
+  padding: 2px 6px;
+}

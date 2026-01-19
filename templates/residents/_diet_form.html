@@ -1,0 +1,112 @@
+<hr>
+<h3 class="mb-4">
+   <b>{{ resident.last_name }} {{ resident.first_name }} </b>    [Pokój {{ resident.room_number }} - Piętro {{ resident.floor }}]
+  
+    <a href="{{ url_for('residents.edit_resident', resident_id=resident.id) }}"
+       class="btn btn-sm btn-outline-primary float-end"
+       onclick="return confirm('Opuscic formatkę i przejśc do edycji mieszkańca?');">
+        Edytuj dane mieszkańca
+      </a>
+  
+
+
+</h3>
+
+<script>
+function validateDietForm(form, event) {
+    // 1. Sprawdź czy kliknięto przycisk "Odepnij"
+    // Szukamy przycisku, który wywołał zdarzenie (obsługa starszych i nowszych przeglądarek)
+    const btn = event.submitter;
+    
+    if (btn && btn.getAttribute('formaction') && btn.getAttribute('formaction').includes('detach_diet')) {
+        return true; // Pozwól odpiąć dietę bez walidacji
+    }
+
+    // 2. Znajdź select wewnątrz TYLKO TEGO formularza (dzięki przekazanemu 'form')
+    const select = form.querySelector('select[name="diet_id"]');
+    
+    if (!select.value || select.value === "") {
+        event.preventDefault(); // Zablokuj wysyłkę
+        alert("❗ Proszę wybrać dietę przed zapisaniem.");
+        select.classList.add('is-invalid');
+        select.focus();
+        return false;
+    }
+
+    return true;
+}
+</script>
+
+<form id="dietForm" method="post"
+      action="{{ url_for('residents.save_diet', resident_id=resident.id) }}" onsubmit="return validateDietForm(this, event)">
+
+  <!-- DIETA -->
+  <div class="mb-3">
+    <label class="form-label fw-bold">Dieta</label>
+    <select name="diet_id" class="form-select" required>
+      <option value="">-- wybierz dietę --</option>
+      {% for d in diets %}
+        <option value="{{ d.id }}"
+          {% if diet and diet.diet_id == d.id %}selected{% endif %}>
+          {{ d.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- POSIŁKI -->
+  <div class="mb-3">
+    <label class="form-label fw-bold">Posiłki jedzone w pokoju</label>
+
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="breakfast"
+        {% if diet and diet.breakfast %}checked{% endif %}>
+      <label class="form-check-label">Śniadanie</label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="lunch"
+        {% if diet and diet.lunch %}checked{% endif %}>
+      <label class="form-check-label">Obiad</label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="dinner"
+        {% if diet and diet.dinner %}checked{% endif %}>
+      <label class="form-check-label">Kolacja</label>
+    </div>
+  </div>
+
+  <!-- UWAGI -->
+  <div class="mb-3">
+    <label class="form-label fw-bold">Uwagi dla kuchni <= (Mieszkaniec:Uwagi)</label>
+    <textarea name="notes" class="form-control" rows="2" autocomplete="off">{{ resident.notes or '' }}</textarea>
+  </div>
+
+  <!-- AKCJE -->
+  <div class="d-flex justify-content-between align-items-center mt-4">
+
+    <!-- LEWA STRONA -->
+    <div class="d-flex gap-2">
+      <button type="submit"   id="submitDiet" class="btn btn-success">
+        💾 Przypisz dietę mieszkańcowi
+      </button>
+
+      <a href="{{ url_for('dashboard.dashboard') }}"
+         class="btn btn-outline-secondary">
+        Anuluj
+      </a>
+    </div>
+
+    <!-- PRAWA STRONA -->
+    {% if resident.has_diet %}
+      <button type="submit"
+              class="btn btn-outline-danger"
+              formaction="{{ url_for('residents.detach_diet', resident_id=resident.id) }}"
+              onclick="return confirm('Czy na pewno odpiąć dietę?');" formnovalidate>
+        Odepnij dietę
+      </button>
+    {% endif %}
+
+  </div>
+</form>

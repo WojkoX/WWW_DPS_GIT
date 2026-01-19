@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+
+
+<h3>
+{% if diet %}Edycja diety{% else %}Nowa dieta{% endif %}
+</h3>
+
+<form method="post" class="mt-3">
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label>Nazwa (PL)</label>
+        <input class="form-control" name="name"
+               value="{{ diet.name if diet else '' }}" required>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label>Kod (techniczny)</label>
+        <input class="form-control" name="code"
+               value="{{ diet.code if diet else '' }}" required>
+    </div>
+   
+</div>
+
+<hr>
+
+<div class="row">
+{% for field, label in [
+ ('is_basic','Podstawowa'),
+ ('is_light','Lekkostrawna'),
+ ('is_diabetes','Cukrzyca'),
+ ('is_milk_free','Bezmleczna'),
+ ('is_mix','MIX'),
+ ('is_peg','PEG'),
+ ('is_restrictive','Restrykcyjna')
+] %}
+<div class="col-md-3">
+    <div class="form-check">
+        <input class="form-check-input"
+               type="checkbox"
+               name="{{ field }}"
+               {% if diet and (diet | attr(field)) %}checked{% endif %}>
+        <label class="form-check-label">{{ label }}</label>
+    </div>
+</div>
+{% endfor %}
+</div>
+
+<hr>
+
+ <div class="col-md-6 mb-3">
+        <label>Uwagi</label>
+        <input class="form-control" name="notes"
+               value="{{ diet.notes if diet else '' }}" >
+ </div>
+
+  <div class="col-md-6 mb-3">
+        <label>Sort - Kolejność na liście</label>
+        <input class="form-control" name="sort_order"
+               value="{{ diet.sort_order if diet else '' }}" required>
+    </div>
+
+<div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" name="active"
+           {% if diet is none or diet.active %}checked{% endif %}>
+    <label class="form-check-label">Aktywna</label>
+</div>
+
+<button class="btn btn-primary">Zapisz</button>
+<a href="{{ url_for('diets.list_diets') }}" class="btn btn-secondary">
+    Anuluj
+</a>
+
+</form>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+from flask import Blueprint, render_template, request, send_file
+from services.nutrition_stats_service import (
+    get_nutrition_stats_grouped_by_floor
+)
+
+bp = Blueprint("stats", __name__, url_prefix="/stats")
+
+
+@bp.route("/nutrition", methods=["GET"])
+def nutrition_stats():
+    stats = get_nutrition_stats_grouped_by_floor()
+    return render_template("stats/nutrition.html", stats=stats)
+
+
+@bp.route("/nutrition/docx", methods=["POST"])
+def nutrition_docx():
+    floor = request.form.get("floor")  # None = całość
+    # TODO: później podpiąć generowanie z szablonu
+    return "DOCX generator – placeholder", 501

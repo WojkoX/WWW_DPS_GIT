@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% block content %}
+
+<main class="app-content">
+<div class="container">
+
+<div class="d-flex justify-content-between mb-3">
+    <h3>Mieszkańcy DPS <small class="text-muted">(Aktywni: {{ active_count }}, Nieaktywni: {{ inactive_count }})</small></h3>
+    <a href="{{ url_for('residents.add_resident') }}" class="btn btn-success">
+        ➕ Nowy mieszkaniec
+    </a>
+</div>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-3">
+        <select name="floor" class="form-select">
+            <option value="">Wszystkie piętra</option>
+            <option value="0" {% if floor == '0' %}selected{% endif %}>Parter</option>
+            <option value="1" {% if floor == '1' %}selected{% endif %}>I piętro</option>
+            <option value="2" {% if floor == '2' %}selected{% endif %}>II piętro</option>
+            <option value="3" {% if floor == '3' %}selected{% endif %}>III piętro</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <select name="active" class="form-select">
+            <option value="1" {% if active == '1' %}selected{% endif %}>Aktywni</option>
+            <option value="0" {% if active == '0' %}selected{% endif %}>Nieaktywni</option>
+            <option value="" {% if active == '' %}selected{% endif %}>Wszyscy</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <button class="btn btn-primary">Filtruj</button>
+    </div>
+
+    <input
+    type="text"
+    id="searchInput"
+    class="form-control"
+    placeholder="Szukaj nazwiska..."
+    style="max-width: 260px;"
+    />
+
+</form>
+
+<table class="table table-striped table-hover table-sticky">
+    <thead class="table-light">
+        <tr>
+            <th onclick="sortTable(0)">Nazwisko i imię ⬍</th>
+            <th onclick="sortTable(1)">Pokój ⬍</th>
+            <th onclick="sortTable(2)">Piętro ⬍</th>
+            <th>Status</th>
+            <th>Uwagi</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in residents.items %}
+        <tr>
+            <td><strong>{{ r.last_name }}</strong> {{ r.first_name }}</td>
+            <td>{{ r.room_number }}</td>
+            <td>{{ r.floor }}</td>
+            <td>
+                {% if r.is_hospital %}
+                    <span class="badge bg-warning">Szpital</span>
+                {% elif r.is_pass %}
+                    <span class="badge bg-info">Przepustka</span>
+                {% elif not r.is_active %}
+                    <span class="badge bg-secondary">Nieaktywny</span>
+                {% else %}
+                    <span class="badge bg-success">OK</span>
+                {% endif %}
+            </td>
+            <td class="small">{{ r.notes }}</td>
+            <td>
+                <a href="{{ url_for('residents.edit_resident', resident_id=r.id) }}"
+                   class="btn btn-sm btn-primary">
+                    Edytuj
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<nav>
+<ul class="pagination">
+
+    {% if residents.has_prev %}
+        <li class="page-item">
+            <a class="page-link"
+               href="{{ url_for(
+                   'residents.list_residents',
+                   page=residents.prev_num,
+                   floor=floor,
+                   active=active
+               ) }}">«</a>
+        </li>
+    {% endif %}
+
+    <li class="page-item disabled">
+        <span class="page-link">
+            Strona {{ residents.page }} / {{ residents.pages }}
+        </span>
+    </li>
+
+    {% if residents.has_next %}
+        <li class="page-item">
+            <a class="page-link"
+               href="{{ url_for(
+                   'residents.list_residents',
+                   page=residents.next_num,
+                   floor=floor,
+                   active=active
+               ) }}">»</a>
+        </li>
+    {% endif %}
+
+</ul>
+</nav>
+
+
+
+</div>
+</main>
+
+<script>
+  const SEARCH_URL = "{{ url_for('residents.search_residents') }}";
+</script>
+
+<script>
+const input = document.getElementById('searchInput');
+const tableBody = document.querySelector('tbody');
+
+let controller = null;
+let debounceTimer = null;
+
+// zapamiętujemy początkową zawartość tabeli (reset)
+const initialTableHTML = tableBody.innerHTML;
+
+input.addEventListener('input', () => {
+  const q = input.value.trim();
+
+  // debounce
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+
+    // reset tabeli, gdy input pusty
+    if (q.length === 0) {
+      if (controller) controller.abort();
+      tableBody.innerHTML = initialTableHTML;
+      return;
+    }
+
+    if (controller) controller.abort();
+    controller = new AbortController();
+
+    fetch(`${SEARCH_URL}?q=${encodeURIComponent(q)}`, {
+      signal: controller.signal
+    })
+      .then(r => r.text())
+      .then(html => {
+        tableBody.innerHTML = html;
+      })
+      .catch(err => {
+        if (err.name !== 'AbortError') {
+          console.error(err);
+        }
+      });
+
+  }, 150); // ← debounce 150 ms
+});
+</script>
+
+<script>
+let sortDir = {};
+
+function sortTable(colIndex) {
+  const table = document.querySelector("table");
+  const tbody = table.tBodies[0];
+  const rows = Array.from(tbody.rows);
+
+  sortDir[colIndex] = !sortDir[colIndex];
+  const dir = sortDir[colIndex] ? 1 : -1;
+
+  rows.sort((a, b) => {
+    let A = a.cells[colIndex].innerText.trim();
+    let B = b.cells[colIndex].innerText.trim();
+
+    let numA = parseFloat(A.replace(',', '.'));
+    let numB = parseFloat(B.replace(',', '.'));
+
+    if (!isNaN(numA) && !isNaN(numB)) {
+      return (numA - numB) * dir;
+    }
+    return A.localeCompare(B, 'pl', { numeric: true }) * dir;
+  });
+
+  rows.forEach(r => tbody.appendChild(r));
+}
+</script>
+
+{% endblock %}

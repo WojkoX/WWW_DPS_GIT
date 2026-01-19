@@ -1,0 +1,199 @@
+/* =========================================================
+   USTAWIENIA STRONY A4 – DRUK
+   ========================================================= */
+@page {
+    size: A4;
+    margin: 12mm;
+}
+
+body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 12pt;
+    color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+/* =========================================================
+   STRUKTURA STRON
+   ========================================================= */
+.page {
+    width: 100%;
+    page-break-after: always;
+}
+
+.page:last-child {
+    page-break-after: auto;
+}
+
+.page-break {
+    page-break-before: always;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6mm;
+    font-weight: bold;
+}
+
+.signature-top {
+    text-align: right;
+    margin-bottom: 8mm;
+}
+
+.title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 16pt;
+    margin: 8mm 0 6mm 0;
+}
+
+/* =========================================================
+   SEKCJE
+   ========================================================= */
+.section-title {
+    font-weight: bold;
+    margin: 6mm 0 3mm 0;
+}
+
+/* =========================================================
+   TABELKI – WSPÓLNA BAZA
+   ========================================================= */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1.5px solid #000;   /* <<< GRUBSZE LINIE */
+    padding: 3px 5px;
+    vertical-align: top;
+}
+
+th {
+    font-weight: bold;
+    text-align: center;
+}
+
+/* =========================================================
+   TABELA OBECNOŚCI
+   ========================================================= */
+.presence-table {
+    width: 80%;
+    margin: 0 auto 6mm auto;
+    text-align: center;
+}
+
+.presence-table th,
+.presence-table td {
+    text-align: center;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+/* =========================================================
+   WYKAZ DIET – 2 PRZEBIEGI
+   ========================================================= */
+.diet-table {
+    font-size: 11pt;
+}
+
+.diet-table th.lp,
+.diet-table td:nth-child(1),
+.diet-table td:nth-child(5) {
+    width: 6%;
+    text-align: center;
+}
+
+.diet-table th.room,
+.diet-table td:nth-child(3),
+.diet-table td:nth-child(7) {
+    width: 8%;
+    text-align: center;
+}
+
+.diet-table th.name,
+.diet-table td:nth-child(2),
+.diet-table td:nth-child(6) {
+    width: 26%;
+}
+
+.diet-table th.diet,
+.diet-table td:nth-child(4),
+.diet-table td:nth-child(8) {
+    width: 30%;
+}
+
+/* =========================================================
+   ZESTAWIENIA (PAGE 2)
+   ========================================================= */
+.summary-table {
+    margin-bottom: 6mm;
+    font-size: 10pt;
+}
+
+.summary-table th {padding: 3px 6px;  }
+.summary-table td {
+    text-align: center;
+}
+
+.summary-table .diet-name {
+    text-align: left;
+    font-weight: bold;
+    
+    width: 40%;
+}
+
+.summary-table tr:last-child td {
+    font-weight: bold;
+}
+
+/* =========================================================
+   UWAGI
+   ========================================================= */
+.uwagi-block {
+    margin-top: 6mm;
+}
+
+.uwagi-title {
+    font-weight: bold;
+    margin-bottom: 2mm;
+}
+
+.uwagi-box {
+    border: 1.5px solid #000;
+    height: 45mm;
+}
+
+/* =========================================================
+   PODPISY
+   ========================================================= */
+.sign-table {
+    width: 60%;
+    margin: 10mm auto 0 auto;
+}
+
+.sign-table td {
+    text-align: center;
+    padding-top: 12mm;
+    border: none;
+    border-top: 1.5px solid #000;
+}
+
+h2.section-title {
+    font-size: 11pt !important;
+    line-height: 1.05 !important;
+    margin-top: 3mm !important;
+    margin-bottom: 2mm !important;
+}
+
+h1, h2, h3 {
+    margin: 0;
+    padding: 0;
+}

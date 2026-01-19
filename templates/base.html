@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>DPS – Panel Posiłków</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/treeview.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app_layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tables.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark app-navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{{ url_for('auth.login') }}">
+            DPS – Panel administracyjny
+        </a>
+
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('diets.list_diets') }}">
+                        🍽️ Słownik diet
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('residents.list_residents') }}">
+                        👥 Mieszkańcy
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('import_csv.upload_csv') }}">
+                        📄 Import CSV
+                    </a>
+                </li>
+
+                <li class="nav-item">
+  			<a class="nav-link" href="{{ url_for('stats.nutrition_stats') }}">
+   		 📊 Zestawienia i dokumenty
+ 			 </a>
+		</li>
+
+            </ul>
+
+            <span class="navbar-text me-3 text-light">
+                Zalogowany: <strong>{{ session.get('username', 'admin') }}</strong>
+            </span>
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="btn btn-outline-light btn-sm">
+                Wyloguj
+            </a>
+
+              <!-- ABOUT APP -->
+            <button type="button"
+            class="btn btn-outline-light btn-sm ms-2"
+            data-bs-toggle="modal"
+            data-bs-target="#aboutAppModal">
+                ?
+            </button>
+
+
+        </div>
+    </div>
+</nav>
+
+<!-- FLASH MESSAGES – ZOSTAJĄ W CONTAINERZE -->
+
+
+
+{% block content %}{% endblock %}
+
+
+
+<!-- CONTENT – BEZ CONTAINERA (FULL WIDTH) -->
+
+
+
+<div class="modal fade"
+     id="aboutAppModal"
+     tabindex="-1"
+     aria-hidden="true">
+
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content about-modal">
+
+      <!-- TŁO -->
+      <div class="about-modal-bg"
+           style="background-image: url('{{ url_for('static', filename='img/aboutimg.jpg') }}');">
+      </div>
+
+      <!-- X -->
+       <button type="button"
+        class="about-modal-close"
+        data-bs-dismiss="modal"
+        aria-label="Close">X</button>
+
+      <!-- CONTENT -->
+      <div class="about-modal-content">
+  <div class="about-glass">
+    <h2 class="about-title">DPS – Panel Posiłków</h2>
+    <p class="about-subtitle">
+      System zarządzania dietami rezydentów   ver. 1.0.0
+    </p>
+
+    <hr>
+
+    <p class="about-meta">
+      Copyright © 2026 <strong>DEV:WojKoX</strong><br>
+      <a href="https://github.com/WojkoX" target="_blank">
+        github.com/WojkoX
+      </a>
+    </p>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

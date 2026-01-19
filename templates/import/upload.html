@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+
+<main class="app-content">
+<div class="container">
+<h3>Import CSV mieszkańców</h3>
+
+<div class="card mt-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Nowy import</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="csvFile" class="form-label">Wybierz plik CSV</label>
+                <input type="file" name="file" id="csvFile" class="form-control" accept=".csv" required>
+            </div>
+            <button class="btn btn-primary" type="submit" onclick="alert('Plik jest importowany.\nSprawdź statusy osób (!) w Panelu administracyjnym')">Importuj</button>
+        </form>
+        <p class="text-muted mt-3">
+            Import jest różnicowy (delta). Osoby nieobecne w pliku zostaną oznaczone jako nieaktywne.
+        </p>
+    </div>
+</div>
+
+{% if csv_files %}
+<div class="card mt-4">
+    <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">Dostępne pliki CSV ({{ csv_files|length }})</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nazwa pliku</th>
+                        <th>Data</th>
+                        <th>Rozmiar</th>
+                        <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in csv_files %}
+                    <tr>
+                        <td>
+                            <i class="bx bx-file"></i>
+                            {{ file.name }}
+                        </td>
+                        <td>{{ file.date }}</td>
+                        <td>{{ file.size_mb }} MB</td>
+                        <td>
+                            <form method="post" action="{{ url_for('import_csv.import_existing_file', filename=file.name) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-primary" onclick="return confirm('Czy chcesz zaimportować ten plik?'); alert('Plik jest importowany.\nSprawdź statusy osób (!) w Panelu administracyjnym')">
+                                    <i class="bx bx-import"></i> Importuj
+                                </button>
+                            </form>
+                            <form method="post" action="{{ url_for('import_csv.delete_file', filename=file.name) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten plik?')">
+                                    <i class="bx bx-trash"></i> Usuń
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-info mt-4">
+    <i class="bx bx-info-circle"></i> Brak dostępnych plików CSV w folderze uploads.
+</div>
+{% endif %}
+
+</div>
+</main>
+{% endblock %}

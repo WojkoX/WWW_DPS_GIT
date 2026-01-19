@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Zestawienia – piętro {{ floor }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/print.css') }}">
+</head>
+<body>
+
+<div class="page2-content">
+
+<div class="page">
+
+    <!-- ================= ZESTAWIENIE 1 ================= -->
+    <h2 class="section-title">
+        ZESTAWIENIE WSZYSTKICH MIESZKAŃCÓW SPOŻYWAJĄCYCH POSIŁKI W POKOJACH:
+    </h2>
+
+    <table class="summary-table">
+        <thead>
+        <tr>
+            <th class="diet-name">Rodzaj diety</th>
+            <th>Śniadanie</th>
+            <th>Obiad</th>
+            <th>Kolacja</th>
+            <th>w tym bezmleczna</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for diet, row in summary_eat.items() %}
+        <tr>
+            <td class="diet-name">{{ diet.upper() }}</td>
+            <td>{{ row["śniadanie"] }}</td>
+            <td>{{ row["obiad"] }}</td>
+            <td>{{ row["kolacja"] }}</td>
+            <td>{{ row["bezmleczna"] }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="bold">
+            <td class="diet-name">RAZEM</td>
+            <td>{{ summary_eat.values() | sum(attribute='śniadanie') }}</td>
+            <td>{{ summary_eat.values() | sum(attribute='obiad') }}</td>
+            <td>{{ summary_eat.values() | sum(attribute='kolacja') }}</td>
+            <td>{{ summary_eat.values() | sum(attribute='bezmleczna') }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- ================= ZESTAWIENIE 2 ================= -->
+    <h2 class="section-title">
+        ZESTAWIENIE W PRZYPADKU JAK WSZYSCY MIESZKAŃCY SPOŻYWAJĄ POSIŁKI W POKOJACH:
+    </h2>
+
+    <table class="summary-table">
+        <thead>
+        <tr>
+            <th class="diet-name">Rodzaj diety</th>
+            <th>Śniadanie</th>
+            <th>Obiad</th>
+            <th>Kolacja</th>
+            <th>w tym bezmleczna</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for diet, row in summary_all.items() %}
+        <tr>
+            <td class="diet-name">{{ diet.upper() }}</td>
+            <td>{{ row["śniadanie"] }}</td>
+            <td>{{ row["obiad"] }}</td>
+            <td>{{ row["kolacja"] }}</td>
+            <td>{{ row["bezmleczna"] }}</td>
+        </tr>
+        {% endfor %}
+         <tr class="bold">
+            <td class="diet-name">RAZEM</td>
+            <td>{{ summary_all.values() | sum(attribute='śniadanie') }}</td>
+            <td>{{ summary_all.values() | sum(attribute='obiad') }}</td>
+            <td>{{ summary_all.values() | sum(attribute='kolacja') }}</td>
+            <td>{{ summary_all.values() | sum(attribute='bezmleczna') }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- ================= UWAGI ================= -->
+    <div class="uwagi-block">
+        <div class="uwagi-title">UWAGI:</div>
+        <div class="uwagi-box"></div>
+    </div>
+
+    <!-- ================= PODPISY ================= -->
+    <table class="sign-table">
+        <tr>
+            <td>Data</td>
+            <td>Sporządził/a</td>
+        </tr>
+    </table>
+
+</div>
+</div>
+</body>
+</html>

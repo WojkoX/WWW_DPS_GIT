@@ -1,0 +1,142 @@
+/* =========================
+   APP DASHBOARD LAYOUT
+   ========================= */
+
+.app-layout {
+  display: flex;
+  width: 100vw;
+  min-height: calc(100vh - 56px); /* wysokość navbar */
+  
+}
+
+/* SIDEBAR / TREEVIEW */
+.app-sidebar {
+  width: 350px;                 /* ← TU regulujesz szerokość treeview */
+  flex-shrink: 0;
+  border-right: 1px solid #6b6969;
+  background-color:rgb(36, 64, 91);
+  padding: 0.5rem;
+  overflow-y: hidden;
+}
+
+/* CONTENT AREA */
+.app-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-top: 1.5rem;   
+}
+
+.app-navbar {
+    background-color: rgb(36, 64, 91);
+}
+
+
+
+/* GŁÓWNY MODAL */
+.about-modal {
+    position: relative;
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+    height: 50vh;
+    width: 70vh;
+    min-height: 420px;
+    background: #000;
+}
+
+/* TŁO OBRAZU */
+.about-modal-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(6px) brightness(0.55);
+    transform: scale(1.05);
+}
+
+/* CONTENT NA SZKLE */
+.about-modal-content {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* TEKSTY */
+.about-title {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.about-subtitle {
+    opacity: 0.85;
+    margin-bottom: 1.5rem;
+}
+
+.about-meta {
+    font-size: 0.9rem;
+    opacity: 0.85;
+}
+
+.about-meta a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* X */
+.about-modal-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 3;
+
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+
+    background: rgba(0,0,0,0.35);
+    color: #fff;
+
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 42px;
+    text-align: center;
+
+    border: none;
+    cursor: pointer;
+
+    transition: background .15s ease, transform .15s ease;
+}
+
+.about-modal-close:hover {
+    background: rgba(0,0,0,0.55);
+    transform: scale(1.08);
+}
+
+.modal.fade .modal-dialog {
+    transform: scale(0.95);
+    transition: transform .2s ease-out;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+}
+
+.about-glass {
+    max-width: 480px;
+    padding: 2.2rem 2.6rem;
+
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    border-radius: 18px;
+    color: #fff;
+    box-shadow: 0 25px 60px rgba(0,0,0,.4);
+
+    text-align: left;
+}

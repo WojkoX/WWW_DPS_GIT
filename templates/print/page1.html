@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Wykaz diet – piętro {{ floor }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/print.css') }}">
+</head>
+<body>
+
+<div class="page">
+
+    <!-- ================= HEADER ================= -->
+    <div class="header">
+        <div class="header-left">
+            <b>PIĘTRO: {{ floor }}</b>
+        </div>
+        <div class="header-right">
+            <b>DATA {{ today.strftime("%Y-%m-%d") }}</b>
+        </div>
+    </div>
+
+    <div class="signature-top">
+        <b>Kierownik Sekcji Żywienia</b><br>
+        w miejscu
+    </div>
+
+    <h1 class="title">
+        INFORMACJA O DIETACH MIESZKAŃCÓW DPS KOMBATANT<br>
+        SPOŻYWAJĄCYCH POSIŁKI W POKOJACH
+    </h1>
+
+    <!-- ================= TABELA OBECNOŚCI ================= -->
+    <table class="presence-table">
+        <tr class="center">
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+        </tr>
+        <tr class="center">
+            <td>Liczba mieszkańców ogółem</td>
+            <td>Osoby będące w szpitalu</td>
+            <td>Osoby będące na przepustce</td>
+        </tr>
+        <tr class="center bold">
+            <td>{{ presence.total }}</td>
+            <td>{{ presence.hospital }}</td>
+            <td>{{ presence.pass }}</td>
+        </tr>
+    </table>
+
+    <h2 class="section-title">WYKAZ DIET:</h2>
+
+    <!-- ================= WYKAZ DIET (2 PRZEBIEGI) ================= -->
+    <table class="diet-table">
+        <thead>
+        <tr>
+            <th class="lp">Lp.</th>
+            <th class="name">Nazwisko i imię mieszkańca</th>
+            <th class="room">Nr pokoju</th>
+            <th class="diet">Rodzaj diety</th>
+
+            <th class="lp">Lp.</th>
+            <th class="name">Nazwisko i imię mieszkańca</th>
+            <th class="room">Nr pokoju</th>
+            <th class="diet">Rodzaj diety</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for row in rows %}
+        <tr>
+            {% for cell in row %}
+                <td>{{ cell|safe }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<ul class="directory-list">
+    {% for file in files %}
+        {% if file|directory(path) %}
+            <li class="directory">
+                <a href="#" 
+                    hx-get="{{ url_for('fileexplorer.browse', path=path ~ '/' ~ file) }}" 
+                    hx-trigger="click" 
+                    hx-swap="outerHTML" 
+                    hx-target="next ul" hx-on::before-request="toggleFolder(this, event)"
+                    data-ffe-dir="{{path ~ '/' ~ file}}"> 
+                    <i class="bx bx-folder"></i>
+                    {{ file }}
+                </a>
+                <ul></ul>
+            </li>
+        {% else %}
+            <li class="file">
+                {% if file |inlineable%} <!-- -->
+                    <a href="#" 
+                        hx-get="{{ url_for('fileexplorer.download', path=path ~ '/' ~ file) }}" 
+                        hx-trigger="click" 
+                        hx-swap="innerHTML" 
+                        hx-target="#file-viewer"
+                        data-ffe-file="{{path ~ '/' ~ file}}"
+                        >
+                        <i class="bx bx-file"></i>
+                        {{ file }}
+                    </a>
+                {% else %}
+                    <!--a href="{{ url_for('fileexplorer.download', path=path ~ '/' ~ file) }}"-->
+                        <i class="bx bx-file"></i>
+                        {{ file }}
+                    <!--/a-->
+                {% endif %}
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>
+

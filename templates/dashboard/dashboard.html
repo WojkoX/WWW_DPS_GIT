@@ -1,0 +1,136 @@
+{% extends "base_dashboard.html" %}
+
+{% block sidebar %}
+
+<div class="treeview-wrapper">
+
+  <!-- GLOBAL CONTROLS -->
+  <div class="d-flex gap-2 mb-2 px-2">
+    <button class="btn btn-sm btn-outline-secondary" onclick="expandAll()">Rozwiń wszystko</button>
+    <button class="btn btn-sm btn-outline-secondary" onclick="collapseAll()">Zwiń wszystko</button>
+  </div>
+
+  <div class="accordion accordion-flush" id="treeAccordion">
+
+    {% for floor, rooms in tree.items() %}
+    <div class="accordion-item border-0">
+
+      <!-- FLOOR -->
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed py-2 px-2 fw-semibold"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#floor-{{ floor }}">
+          🏢
+          {% if floor == 0 %}Parter{% else %}Piętro {{ floor }}{% endif %}
+          {% if rooms._needs_attention %}
+            <span class="text-danger fw-bold ms-1">!</span>
+          {% endif %}
+        </button>
+      </h2>
+
+      <div id="floor-{{ floor }}" class="accordion-collapse collapse" data-bs-parent="#treeAccordion">
+        <div class="accordion-body py-1 px-2">
+
+          {% for room_number, room in rooms.items() if room_number != '_needs_attention' %}
+          <div class="accordion accordion-flush ms-2">
+
+            <div class="accordion-item border-0">
+
+              <!-- ROOM -->
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed py-1 px-2 fs-6"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#room-{{ floor }}-{{ room_number }}">
+                  🚪 Pokój {{ room_number }}
+                  {% if room.needs_attention %}
+                    <span class="text-danger fw-bold ms-1">!</span>
+                  {% endif %}
+                </button>
+              </h2>
+
+              <div id="room-{{ floor }}-{{ room_number }}" class="accordion-collapse collapse">
+                <div class="accordion-body py-1 px-2">
+
+                  {% for r in room.residents %}
+                  <div class="tree-leaf" onclick="loadDietForm({{ r.id }})">
+                    👤 {{ r.last_name }} {{ r.first_name }}
+
+                    {% if r.is_hospital %}
+                      🏥
+                    {% elif r.is_pass %}
+                      🏠
+                    {% elif r.has_diet %}
+                      🍽
+                    {% else %}
+                      ❗
+                    {% endif %}
+                  </div>
+                  {% endfor %}
+
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block dashboard_content %}
+
+<!-- 🔥 FLASH TYLKO DLA DASHBOARDU -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for cat, msg in messages %}
+      <div class="alert alert-{{ cat }} alert-dismissible fade show mb-3" role="alert">
+        {{ msg }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h4">Przypisy diety</h1>
+</div>
+
+<!-- LEGENDA IKON – JUŻ NIE ROZWALA TREE -->
+<div class="alert alert-info">
+ <b>Statusy osoby:</b> ❗ – uwaga/brak diety,  🍽 – ma dietę,  🏥 – szpital,  🏠 – przepustka
+</div>
+
+<div id="detail-pane">
+  <div class="alert alert-secondary">
+    Wybierz mieszkańca z drzewa po lewej stronie.
+  </div>
+</div>
+
+<script>
+function loadDietForm(id) {
+  fetch(`/mieszkancy/${id}/dieta/partial`)
+    .then(r => r.text())
+    .then(html => document.getElementById('detail-pane').innerHTML = html);
+}
+
+function expandAll() {
+  document.querySelectorAll('.accordion-collapse')
+    .forEach(el => new bootstrap.Collapse(el, { show: true }));
+}
+
+function collapseAll() {
+  document.querySelectorAll('.accordion-collapse')
+    .forEach(el => new bootstrap.Collapse(el, { hide: true }));
+}
+</script>
+
+{% endblock %}

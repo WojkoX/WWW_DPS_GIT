@@ -1,0 +1,61 @@
+body {
+    background-color: #24405B;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.fileexplorer-scope .card {
+    background-color: #ffffff;
+}
+
+
+.fileexplorer-scope .card {
+    border-radius: 0.6rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,.08);
+}
+
+
+.fileexplorer-scope .card-body {
+    background-color: #ffffff;
+}
+
+
+.fileexplorer-scope .fe-row {
+    transition: background-color .15s ease;
+}
+
+.fileexplorer-scope .fe-row:hover {
+    background-color: #707172;
+}
+
+.fileexplorer-scope .fe-icon {
+    font-size: 1.25rem;
+    width: 32px;
+    text-align: center;
+}
+
+.fileexplorer-scope .fe-name {
+    font-weight: 600;
+}
+
+.fileexplorer-scope .fe-meta {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.fileexplorer-scope .dropzone {
+    background-color: #f8f9fa;
+}
+
+
+
+.fileexplorer-scope .dropzone.dz-drag-hover {
+    background-color: #e9ecef;
+}
